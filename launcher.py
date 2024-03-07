@@ -113,7 +113,7 @@ def selectcustom():
 bg_color = "white"
 launcher = Tk()
 launcher.title("Kopfrechentrainer Launcher")
-launcher.geometry("670x500")
+launcher.geometry("905x500")
 launcher.config(bg=bg_color)
 
 #Create layout
@@ -172,15 +172,20 @@ timer.grid(row=5, column=1, columnspan=2, padx=5, pady=5,sticky="wen")
 
 def update_input(status, m=None, d=None, p=None, s=None, t=None):
 
+    #Used to toggle the active buttons
+    bt_easy.config(state=ACTIVE)
+    bt_medium.config(state=ACTIVE)
+    bt_hard.config(state=ACTIVE)
+    bt_custom.config(state=ACTIVE)
     match mode:
         case "easy":
             bt_easy.config(state=DISABLED)
         case "medium":
-            bt_easy.config(state=DISABLED)
+            bt_medium.config(state=DISABLED)
         case "hard":
-            bt_easy.config(state=DISABLED)
+            bt_hard.config(state=DISABLED)
         case "custom":
-            bt_easy.config(state=DISABLED)
+            bt_custom.config(state=DISABLED)
     
     timer.config(state=NORMAL)
     timer.delete(0, END)
