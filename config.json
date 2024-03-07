@@ -1,0 +1,38 @@
+{
+    "active": [
+        {
+            "mode":"easy",
+            "name":"Leo"
+        }
+    ],
+    "modes": {
+        "easy": [{
+            "pwr": false,
+            "sqrt": false,
+            "multiply": true,
+            "divide": false,
+            "timer": 10
+        }],
+        "medium": [{
+            "pwr": false,
+            "sqrt": false,
+            "multiply": true,
+            "divide": true,
+            "timer": 8
+        }],
+        "hard": [{
+            "pwr": true,
+            "sqrt": true,
+            "multiply": true,
+            "divide": true,
+            "timer": 7
+        }],
+        "custom": [{
+            "pwr": true,
+            "sqrt": true,
+            "multiply": true,
+            "divide": true,
+            "timer": 10
+        }]   
+    }     
+}
