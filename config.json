@@ -1,8 +1,8 @@
 {
     "active": [
         {
-            "mode": "custom",
-            "name": "Leo"
+            "mode": "medium",
+            "name": "Josh"
         }
     ],
     "modes": {
@@ -35,7 +35,7 @@
         ],
         "custom": [
             {
-                "pwr": true,
+                "pwr": false,
                 "sqrt": false,
                 "multiply": true,
                 "divide": true,

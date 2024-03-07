@@ -8,30 +8,37 @@ from json import *
 def setmode(modus):
     global mode
     mode = modus
+    return mode
 
 def setname(name):
     global username
     username = name
+    return name
 
 def setmultiply(multiply):
     global multiply_js
     multiply_js = int(multiply)
+    return multiply_js
 
 def setdivide(divide):
     global divide_js
     divide_js = int(divide)
+    return divide_js
 
 def setpwr(pwr):
     global pwr_js
     pwr_js = int(pwr)
+    return pwr_js
 
 def setsqrt(sqrt):
     global sqrt_js
     sqrt_js = int(sqrt)
+    return sqrt_js
 
 def settimer(time):
     global seconds
     seconds = time
+    return seconds
 
 def seteasy():
     for i in config_data["modes"]["easy"]:
@@ -91,12 +98,15 @@ def selectcustom():
     setcustom()
     update_input(NORMAL, multiply_js, divide_js, pwr_js, sqrt_js, seconds)
 
-def main():
-    #Get config from config.json
+def initconfig():
     global config_data
     f = open("config.json","r")
     config_data = load(f)
+    return config_data
 
+def main():
+    #Get config from config.json
+    initconfig()
     for i in config_data["active"]:
         setmode(i["mode"])
         setname(i["name"])
