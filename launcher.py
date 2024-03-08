@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from json import *
 
+
 #Launcher for the Kopfrechentrainer
 
 #functions to set configs
@@ -103,6 +104,9 @@ def initconfig():
     f = open("config.json","r")
     config_data = load(f)
     return config_data
+
+def getlauncher():
+    return launcher
 
 def main():
     #Get config from config.json
@@ -217,6 +221,7 @@ def initgui():
     launcher.protocol("WM_DELETE_WINDOW", window_exit)
     launcher.mainloop()
 
+
 #Updates the value shown on screen so that person sees them, takes a lot as input wtf why am i here its 0:37am xD
 def update_input(status, m=None, d=None, p=None, s=None, t=None):
 
@@ -278,6 +283,9 @@ def window_exit():
 #initialize launch
 def initlaunch():
     update_config(bool(int(multiply_var.get())), bool(int(divide_var.get())), bool(int(pwr_var.get())), bool(int(sqrt_var.get())), int(timer.get()))
+    #launcher.withdraw()
+    from game import startgamemain
+    startgamemain()
 
 if __name__ == "__main__":
     main()

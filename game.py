@@ -1,8 +1,10 @@
-from launcher import *
 from json import *
 from tkinter import *
 
-def main():
+from launcher import *
+
+def startgamemain():
+    global config_data
     config_data = initconfig()
 
     for i in config_data["active"]:
@@ -26,6 +28,7 @@ def main():
     print(f"Mode: {mode}, Name {name}")
 
 def initgamegui():
+    global game
     game = Tk()
     game.title("Kopfrechentrainer Launcher")
     game.config(bg="white")
@@ -33,5 +36,13 @@ def initgamegui():
     game.state("zoomed")
     game.mainloop()
 
+"""
+In case I want to add the ability to minimize the launcher window while running the game
+def window_close():
+    exit = messagebox.askyesno("Exit?", "Willst du das Fenster schließen? \n Es wird alles gespeichert!")
+    if exit:
+        game.destroy()
+"""
+
 if __name__ == "__main__":
-    main()
+    startgamemain()
