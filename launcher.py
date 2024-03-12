@@ -48,6 +48,7 @@ def seteasy():
         setpwr(i["pwr"])
         setsqrt(i["sqrt"])
         settimer(i["timer"])
+    return multiply_js, divide_js, pwr_js, sqrt_js, seconds
 
 def setmedium():
     for i in config_data["modes"]["medium"]:
@@ -56,6 +57,7 @@ def setmedium():
         setpwr(i["pwr"])
         setsqrt(i["sqrt"])
         settimer(i["timer"])
+    return multiply_js, divide_js, pwr_js, sqrt_js, seconds
 
 def sethard():
     for i in config_data["modes"]["hard"]:
@@ -64,6 +66,7 @@ def sethard():
         setpwr(i["pwr"])
         setsqrt(i["sqrt"])
         settimer(i["timer"])
+    return multiply_js, divide_js, pwr_js, sqrt_js, seconds
 
 def setcustom():
     for i in config_data["modes"]["custom"]:
@@ -72,6 +75,7 @@ def setcustom():
         setpwr(i["pwr"])
         setsqrt(i["sqrt"])
         settimer(i["timer"])
+    return multiply_js, divide_js, pwr_js, sqrt_js, seconds
 
 #Functions to change mode
 def selecteasy():
