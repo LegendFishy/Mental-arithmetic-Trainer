@@ -1,8 +1,8 @@
 {
     "active": [
         {
-            "mode": "medium",
-            "name": "Josh"
+            "mode": "custom",
+            "name": "Leo"
         }
     ],
     "modes": {
@@ -38,9 +38,15 @@
                 "pwr": false,
                 "sqrt": false,
                 "multiply": true,
-                "divide": true,
+                "divide": false,
                 "timer": 8
             }
         ]
-    }
+    },
+    "saved": [
+        {
+            "highscore": 181.0,
+            "online": false
+        }
+    ]
 }
