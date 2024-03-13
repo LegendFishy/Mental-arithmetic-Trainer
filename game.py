@@ -111,9 +111,9 @@ def initgamegui():
     start_bt.grid(row=2, column=0, columnspan=6, sticky="n", padx=5, pady=5)
     start_bt.config(command=startgame)
 
-    g_info_text = f"Wenn du bereit bist, drücke START! \n Dir werden dann Fragen gestellt, die du im darunter liegenden Eingabefeld beantwortest. \n Bei richtig beantworteten Fragen wird dein Score erhöht! \n Du hast jeweils {timer} Sekunden Zeit um die fragen zu beantworten! "
-    g_info = Label(start, bg=bg_color_game, fg=fg_color_game, text=g_info_text, font=("System", 15))
-    g_info.grid(row=3, column=0, columnspan=6, sticky="n", padx=5, pady=5)
+    g_info_text = f"Wenn du bereit bist, drücke START! \n Dir werden dann Fragen gestellt, die du im darunter liegenden Eingabefeld beantwortest. \n Bei richtig beantworteten Fragen wird dein Score erhöht! \n Du hast jeweils {timer} Sekunden Zeit um die Fragen zu beantworten! "
+    g_info = Label(start, bg=bg_color_game, fg="green", text=g_info_text, font=("System", 15))
+    g_info.grid(row=3, column=0, columnspan=6, sticky="n", padx=5, pady=10)
 
 #Game window
     game_r = Frame(game, bg=bg_color_game)
