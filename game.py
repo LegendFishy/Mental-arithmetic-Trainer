@@ -12,15 +12,14 @@ def startgamemain():
     global score
     global mode
     global name
+    global highscore
+    global online
 
     global multiply_js
     global divide_js
     global pwr_js
     global sqrt_js
     global timer
-    
-
-    score = 0
 
     global config_data
     config_data = initconfig()
@@ -28,6 +27,13 @@ def startgamemain():
     for i in config_data["active"]:
         mode = setmode(i["mode"])
         name = setname(i["name"])
+
+    for i in config_data["saved"]:
+        highscore = sethighscore(i["highscore"])
+        online = setonline(i["online"])
+
+    score = 0
+
 
     match mode:
         case "easy":
@@ -55,6 +61,11 @@ def initgamegui():
     global calc
     global p_input
     global score_txt
+    global exitscreen
+    global score_info
+    global highscore_txt
+    global failmessage
+
 
     global bg_color_game
 
@@ -87,9 +98,9 @@ def initgamegui():
     mode_txt = ttk.Label(game, text=mode.upper(), anchor="center", background=bg_color_game, foreground=fg_color_game, font=("Modern", 20, "bold"))
     mode_txt.grid(padx=5, pady=5, row=0, column=0, columnspan=6, sticky="n")
 
-#Display Username right
-    name_txt = ttk.Label(game, text=f"Username: {name}", background=bg_color_game, foreground=fg_color_game, font=("Modern", 20, "bold"),)
-    name_txt.grid(row=0, column=0, columnspan=6, padx=5, pady=5, sticky="e")
+#Display Highscore right
+    highscore_txt = ttk.Label(game, text=f"Highscore: {highscore}", background=bg_color_game, foreground=fg_color_game, font=("Modern", 20, "bold"),)
+    highscore_txt.grid(row=0, column=0, columnspan=6, padx=5, pady=5, sticky="e")
 
 #Start window
     start = Frame(game, bg=bg_color_game)
@@ -100,7 +111,7 @@ def initgamegui():
     start_bt.grid(row=2, column=0, columnspan=6, sticky="n", padx=5, pady=5)
     start_bt.config(command=startgame)
 
-    g_info_text = "Wenn du bereit bist, drücke START! \n Dir werden dann Fragen gestellt, die du im darunter liegenden Eingabefeld beantwortest. \n Bei richtig beantworteten Fragen wird dein Score erhöht!  "
+    g_info_text = f"Wenn du bereit bist, drücke START! \n Dir werden dann Fragen gestellt, die du im darunter liegenden Eingabefeld beantwortest. \n Bei richtig beantworteten Fragen wird dein Score erhöht! \n Du hast jeweils {timer} Sekunden Zeit um die fragen zu beantworten! "
     g_info = Label(start, bg=bg_color_game, fg=fg_color_game, text=g_info_text, font=("System", 15))
     g_info.grid(row=3, column=0, columnspan=6, sticky="n", padx=5, pady=5)
 
@@ -117,10 +128,32 @@ def initgamegui():
     
     bt_inp = Button(game_r, text="Confirm", bg="#333", fg=fg_color_game, font=("Terminal", 20), command=button_pressed)
     bt_inp.grid(row=4, column=0, columnspan=6, sticky="n", padx=5, pady=15)
+
+#Exit screen
+    exitscreen = Frame(game, bg=bg_color_game)
+    #is hidden by default
+    exitscreen.grid_forget()
+
+    restart_txt = Label(exitscreen, bg=bg_color_game, fg=fg_color_game, text="GAME OVER", font=("Terminal", 50, "bold"), anchor="center", justify="center")
+    restart_txt.grid(row=2, column=0, columnspan=6, sticky="n", padx=5, pady=5)
+
+    score_info = Label(exitscreen, bg=bg_color_game, fg="yellow", font=("System", 15))
+    score_info.grid(row=3, column=0, columnspan=6, sticky="n", padx=5, pady=5)
+
+    failmessage = Label(exitscreen, bg=bg_color_game, fg="red", font=("System", 15))
+    failmessage.grid(row=4, column=0, columnspan=6, sticky="n", padx=5, pady=10)
+
+
+    restart_bt = Button(exitscreen, text="Restart", bg="#333", fg=fg_color_game, font=("Terminal", 20), command=restartbutton)
+    restart_bt.grid(row=5, column=0, columnspan=6, sticky="n", padx=5, pady=15)
+    
     
     game.protocol("WM_DELETE_WINDOW", window_close)
     game.mainloop()
 
+
+
+#Start Game in sperate thread because it otherwise wont load
 def startgamethread():
     threading.Thread(target=startgame).start()
 
@@ -173,19 +206,15 @@ def check_answer():
     global upl
     global op
     global running
+    global p_input
 
-    print(last_bt_pressed)
+
     #calculate time difference
     if last_bt_pressed == None:
         time_dif = time() - button_pressed_time
     else:
         time_dif = last_bt_pressed - button_pressed_time
     last_bt_pressed = button_pressed_time
-    print(time())
-    print(button_pressed_time)
-    print(time_dif)
-    print(timer)
-
     if (time_dif * -1) < timer:
         answer = float(p_input.get())
         if answer == float(result):
@@ -197,18 +226,18 @@ def check_answer():
             #every 5 rounds the range is getting increased by 5 and the timer gets a little bit smaller
             if counter%5 == 0:
                 upl += 5
-                #timer = timer * 0.9
-            print("LEts go ")
+                timer = timer * 0.9
             result, op = createnewlevel()
             changebg(True)
+            p_input.delete(0, END)
         else:
             running = False
             changebg(False)
-            exitgame()
+            exitgame("Falsche Antwort!!!")
     else:
         running = False
         changebg(False)
-        exitgame()
+        exitgame("Dein Zeit ist abgelaufen!!!")
 
 def check_button():
     global button_pressed_time
@@ -231,10 +260,6 @@ def changebg(state):
     bg_color_game = "black"
     game.config(bg=bg_color_game)
     game.update
-
-
-def exitgame():
-    print("Game Over")
 
 #func to create new calculation
 def createcalc():
@@ -299,6 +324,34 @@ def updatescore(score):
     score_txt.config(text=f"Score: {score}")
     game.update()
 
+
+
+
+def restartbutton():
+    global score
+    exitscreen.grid_forget()
+    score = 0
+    score_txt.config(text=f"Score: {score}")
+    start.grid(row=2, column=0, columnspan=6, rowspan=3, sticky="n", pady=((Height)/4))
+
+def exitgame(message):
+    global highscore
+    #print("Game Over")
+    game_r.grid_forget()
+    score_info.config(text=f"Dein Score: {score}")
+    failmessage.config(text=message)
+    exitscreen.grid(row=2, column=0, columnspan=6, rowspan=3, sticky="n", pady=((Height)/4))
+    if score > highscore:
+        highscore = score
+        highscore_txt.config(text=f"Highscore: {highscore}")
+        with open("config.json", "r+") as f:
+            config = load(f)
+            for i in config["saved"]:
+                i["highscore"] = score
+
+            f.seek(0)
+            dump(config, f, indent=4)
+            f.truncate()
 
 
 #In case I want to add the ability to minimize the launcher window while running the game

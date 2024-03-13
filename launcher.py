@@ -41,6 +41,14 @@ def settimer(time):
     seconds = time
     return seconds
 
+def sethighscore(highscore):
+    score = highscore
+    return score
+
+def setonline(state):
+    online = state
+    return online
+
 def seteasy():
     for i in config_data["modes"]["easy"]:
         setmultiply(i["multiply"])

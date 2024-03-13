@@ -42,5 +42,11 @@
                 "timer": 8
             }
         ]
-    }
+    },
+    "saved": [
+        {
+            "highscore": 181.0,
+            "online": false
+        }
+    ]
 }
