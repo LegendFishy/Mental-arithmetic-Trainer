@@ -12,7 +12,7 @@
                 "sqrt": false,
                 "multiply": true,
                 "divide": false,
-                "timer": 10
+                "timer": 15
             }
         ],
         "medium": [
@@ -21,7 +21,7 @@
                 "sqrt": false,
                 "multiply": true,
                 "divide": true,
-                "timer": 8
+                "timer": 12
             }
         ],
         "hard": [
@@ -30,7 +30,7 @@
                 "sqrt": true,
                 "multiply": true,
                 "divide": true,
-                "timer": 7
+                "timer": 10
             }
         ],
         "custom": [
