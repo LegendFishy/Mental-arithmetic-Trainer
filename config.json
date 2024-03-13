@@ -39,7 +39,7 @@
                 "sqrt": false,
                 "multiply": true,
                 "divide": false,
-                "timer": 4
+                "timer": 8
             }
         ]
     }

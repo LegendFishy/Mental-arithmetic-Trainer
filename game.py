@@ -56,6 +56,8 @@ def initgamegui():
     global p_input
     global score_txt
 
+    global bg_color_game
+
     bg_color_game = "black"
     fg_color_game = "white"
     calculation = "None"
@@ -113,7 +115,7 @@ def initgamegui():
     p_input = Entry(game_r, bg="#333", fg=fg_color_game, font=("Terminal", 20))
     p_input.grid(row=3, column=0, columnspan=6, sticky="n", padx=5, pady=20)
     
-    bt_inp = Button(game_r, text="Confirm", bg="#333", fg=fg_color_game, font=("Terminal", 20), command=getcontentonpress)
+    bt_inp = Button(game_r, text="Confirm", bg="#333", fg=fg_color_game, font=("Terminal", 20), command=button_pressed)
     bt_inp.grid(row=4, column=0, columnspan=6, sticky="n", padx=5, pady=15)
     
     game.protocol("WM_DELETE_WINDOW", window_close)
@@ -121,7 +123,6 @@ def initgamegui():
 
 def startgamethread():
     threading.Thread(target=startgame).start()
-
 
 #actuall game
 def startgame():
@@ -131,9 +132,10 @@ def startgame():
     global op
     global counter
     global score
-    global timer_thread
-    global won
-    global check
+    global button_pressed_time
+    global last_bt_pressed
+    global running
+
 
     upl = 10
     counter = 0
@@ -141,67 +143,94 @@ def startgame():
 
     start.grid_forget()
     game_r.grid(row=2, column=0, columnspan=6, rowspan=3, sticky="n", pady=((Height)/4))
-    t = multiprocessing.Queue()
-    timer_thread = multiprocessing.Process(target=starttimer,daemon=True, args=(t, ))
     
-    while True:
-        won = False
-        check = False
-        calc, result, op = createcalc()
-        updatecalc(calc)
-        timer_thread.start()
-        checker_thread = threading.Thread(target=constant_check)
-        checker_thread.start()
-        checker_thread.join()
-        if check == False:
-            exitgame()
-            break
-
-def constant_check():
-    while (timer - t.get()) <= 0:
-        if won == True:
-            check = True
-            timer_thread.terminate()
-    
-
-def getcontentonpress():
-    global content
-    content = p_input.get()
-    checkresult(content)
+    #while True:
+    result, op = createnewlevel()
+    running = True
+    button_pressed_time = None
+    last_bt_pressed = None
+    checker_thread = threading.Thread(target=check_button, daemon=True)
+    checker_thread.start()
 
 
-def checkresult(inp):
+def createnewlevel():
+    calc, result, op = createcalc()
+    updatecalc(calc)
+    return result, op
+
+
+def button_pressed():
+    global button_pressed_time
+    button_pressed_time = time()
+
+def check_answer():
+    global button_pressed_time
+    global last_bt_pressed
+    global timer
     global result
     global counter
     global score
     global upl
-    global t
-    global timer_thread
-    global won
-    if float(inp) == float(result):
-        counter += 1
-        #calculate new score
-        n_score = calcscore(score)
-        updatescore(n_score)
-        score = n_score
-        #every 5 rounds the range is getting increased by 5 and the timer gets a little bit smaller
-        if counter%5 == 0:
-            upl += 5
-            #timer = timer * 0.9
-        won = True
-        print("LEts go ")
+    global op
+    global running
 
+    print(last_bt_pressed)
+    #calculate time difference
+    if last_bt_pressed == None:
+        time_dif = time() - button_pressed_time
+    else:
+        time_dif = last_bt_pressed - button_pressed_time
+    last_bt_pressed = button_pressed_time
+    print(time())
+    print(button_pressed_time)
+    print(time_dif)
+    print(timer)
 
+    if (time_dif * -1) < timer:
+        answer = float(p_input.get())
+        if answer == float(result):
+            counter += 1
+            #calculate new score
+            n_score = calcscore(score, time_dif)
+            updatescore(n_score)
+            score = n_score
+            #every 5 rounds the range is getting increased by 5 and the timer gets a little bit smaller
+            if counter%5 == 0:
+                upl += 5
+                #timer = timer * 0.9
+            print("LEts go ")
+            result, op = createnewlevel()
+            changebg(True)
+        else:
+            running = False
+            changebg(False)
+            exitgame()
+    else:
+        running = False
+        changebg(False)
+        exitgame()
 
+def check_button():
+    global button_pressed_time
+    global running
+    while running:
+        if button_pressed_time:
+            check_answer()
+            button_pressed_time = None
+        sleep(0.1)
 
-def starttimer(t):
-    time = 0
-    while True:
-        time += 1
-        t.put(time)
-        sleep(1)
-        #print(r_time)
-
+def changebg(state):
+    global bg_color_game
+    if state:
+        bg_color_game = "green"
+    else:
+        bg_color_game = "red"
+    game.config(bg=bg_color_game)      
+    game.update()
+    sleep(0.3)
+    bg_color_game = "black"
+    game.config(bg=bg_color_game)
+    game.update
 
 
 def exitgame():
@@ -244,11 +273,9 @@ def createcalc():
     return calc, result, op
 
 #func to calc new score
-def calcscore(score):
-    global r_time
+def calcscore(score, r_time):
     global upl
     global op
-    r_time = 4
     """
     Die score-Berechnung folgt folgendem schema:
     - bei jeder richtigen Rechnung wird 10 addiert
