@@ -1,8 +1,8 @@
 {
     "active": [
         {
-            "mode": "custom",
-            "name": "Leo"
+            "mode": "easy",
+            "name": ""
         }
     ],
     "modes": {
@@ -45,7 +45,7 @@
     },
     "saved": [
         {
-            "highscore": 181.0,
+            "highscore": 0.0,
             "online": false
         }
     ]
